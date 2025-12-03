@@ -21,9 +21,10 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../config");
 const router = (0, express_1.Router)();
 router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const body = req.body.username;
+    const body = req.body;
     const parsedData = types_1.SignupSchema.safeParse(body);
     if (!parsedData.success) {
+        console.log(parsedData.error);
         return res.status(411).json({
             message: "Incorrect Inputs"
         });
@@ -51,7 +52,7 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
     });
 }));
 router.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const body = req.body.username;
+    const body = req.body;
     const parsedData = types_1.SigninSchema.safeParse(body);
     if (!parsedData.success) {
         return res.status(411).json({
@@ -76,7 +77,7 @@ router.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function*
         token: token,
     });
 }));
-router.get("/user", middleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", middleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //@ts-ignore
     const id = req.id;
     const user = yield db_1.prismaClient.user.findFirst({

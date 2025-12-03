@@ -9,10 +9,12 @@ import { JWT_PASSWORD } from "../config";
 const router = Router();
 
 router.post("/signup" , async(req,res) => {
-    const body = req.body.username
+    const body = req.body
     const parsedData = SignupSchema.safeParse(body);
 
+    
     if(!parsedData.success){
+        console.log(parsedData.error);
         return res.status(411).json({
             message:"Incorrect Inputs"
         })
@@ -47,7 +49,7 @@ router.post("/signup" , async(req,res) => {
 
 router.post("/signin" , async(req,res) => {
 
-    const body = req.body.username
+    const body = req.body
     const parsedData = SigninSchema.safeParse(body);
 
     if(!parsedData.success){
@@ -78,7 +80,7 @@ router.post("/signin" , async(req,res) => {
     })
 })
 
-router.get("/user" ,authMiddleware, async(req,res) => {
+router.get("/" ,authMiddleware, async(req,res) => {
     //@ts-ignore
     const id = req.id;
     const user = await prismaClient.user.findFirst({
