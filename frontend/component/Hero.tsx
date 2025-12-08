@@ -1,0 +1,36 @@
+"use client"
+import { PrimaryButton } from "./button/PrimaryButton"
+import { SecondaryButton } from "./button/SecondaryButton"
+import { Feature } from "./Feature"
+
+export const Hero = () => {
+    return <div>
+      
+      <div className="flex justify-center">
+        <div className="text-5xl font-semibold text-center pt-8 max-w-xl">
+          Automate fast as you can type
+        </div>
+      </div>
+
+      <div className="flex justify-center pt-2">
+        <div className="text-xl font-normal text-center pt-8 max-w-2xl">
+          AI gives you automation superpowers, and Zapier puts them to work. Pairing AI and Zapier helps you turn ideas into workflows and bots work for you.
+        </div>
+      </div>
+
+      <div className="flex justify-center pt-4">
+       <div className="flex">
+         <PrimaryButton onClick={() => {}} size="big"> Get Started free</PrimaryButton>
+         <div className="pl-4">
+         <SecondaryButton onClick={() =>{}} size="big">Contact Sales</SecondaryButton>
+         </div>
+       </div>
+      </div>
+            
+        <div className="flex justify-center">
+          <Feature title = {"Free Forever"} subtitle={"for core features"}></Feature>
+          <Feature title = {"More apps"} subtitle={"than any other platforms"}></Feature>
+          <Feature title = {"Cutting-edge"} subtitle={"AI features"}></Feature>
+        </div>
+    </div>
+}
