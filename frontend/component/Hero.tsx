@@ -1,9 +1,12 @@
 "use client"
+import { useRouter } from "next/navigation"
 import { PrimaryButton } from "./button/PrimaryButton"
 import { SecondaryButton } from "./button/SecondaryButton"
 import { Feature } from "./Feature"
 
 export const Hero = () => {
+  const router = useRouter();
+
     return <div>
       
       <div className="flex justify-center">
@@ -20,17 +23,19 @@ export const Hero = () => {
 
       <div className="flex justify-center pt-4">
        <div className="flex">
-         <PrimaryButton onClick={() => {}} size="big"> Get Started free</PrimaryButton>
+         <PrimaryButton onClick={() => {
+          router.push("/signup")
+         }} size="big"> Get Started free</PrimaryButton>
          <div className="pl-4">
          <SecondaryButton onClick={() =>{}} size="big">Contact Sales</SecondaryButton>
          </div>
        </div>
       </div>
             
-        <div className="flex justify-center">
-          <Feature title = {"Free Forever"} subtitle={"for core features"}></Feature>
-          <Feature title = {"More apps"} subtitle={"than any other platforms"}></Feature>
-          <Feature title = {"Cutting-edge"} subtitle={"AI features"}></Feature>
+        <div className="flex justify-center pt-4">
+          <Feature title = {"Free Forever"} subtitle={" for core features"}></Feature>
+          <Feature title = {"More apps"} subtitle={" than any other platforms"}></Feature>
+          <Feature title = {"Cutting-edge"} subtitle={" AI features"}></Feature>
         </div>
     </div>
 }
