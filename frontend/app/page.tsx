@@ -1,3 +1,4 @@
+"use client"
 import { Appbar } from "@/component/Appbar";
 import { Hero } from "@/component/Hero";
 import { HeroVideo } from "@/component/HeroVideo";

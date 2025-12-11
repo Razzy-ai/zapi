@@ -6,7 +6,7 @@ import { CheckFeature } from "@/component/CheckFeature"
 import { Input } from "@/component/Input"
 import axios from "axios"
 import { BACKEND_URL } from "../config"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 
 
 export default function SignupPage() {

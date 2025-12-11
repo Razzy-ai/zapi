@@ -6,7 +6,7 @@ import { Input } from "@/component/Input"
 import { useState } from "react"
 import { BACKEND_URL } from "../config"
 import axios from "axios"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 
 export default function SignupPage() {
     const router = useRouter();
@@ -45,14 +45,14 @@ export default function SignupPage() {
                         }} type="password" placeholder="Password" />
                     <div className="pt-4">
                         <PrimaryButton onClick={async() => {
-                             const res = await axios.post(`${BACKEND_URL}/api/v1/user/signup` , {
+                             const res = await axios.post(`${BACKEND_URL}/api/v1/user/signin` , {
                                 username : email,
                                 password,
                              });
                              //take a token and put it in localStorage
                              localStorage.setItem("token" , res.data.token)
                              router.push("/dashboard")
-                        }} size="big"> Get started free</PrimaryButton>
+                        }} size="big">Login</PrimaryButton>
                     </div>
                 </div>
 
