@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LinkButton } from "@/component/button/LinkButton";
 
+
 interface Zap {
   "id": string,
   "triggerId": string,
@@ -18,7 +19,8 @@ interface Zap {
     "triggerId": string,
     "type": {
       "id": string,
-      "name": string
+      "name": string,
+      "image": string
     }
   }
 
@@ -29,7 +31,8 @@ interface Zap {
     "sortingOrder": number,
     "type": {
       "id": string,
-      "name": string
+      "name": string,
+      "image": string
     }
   }[],
 }
@@ -61,28 +64,28 @@ function ZapTable({ zaps }: { zaps: Zap[] }) {
 
   return <div className="p-8 max-w-screen-lg w-full">
     <div className="flex">
-     
-        <div className="flex-1">Name</div>
-        <div className="flex-1">ID</div>
-        <div className="flex-1">Created at</div>
-        <div className="flex-1">Webhook URL</div>
-        <div className="flex-1">Go</div>
-      
-    </div>
-  
-      {zaps.map(z => <div key={z.id} className="flex border-b border-t py-4">
 
-          <div className="flex-1">{z.trigger.type.name} {z.actions.map(x => x.type.name + " ")}</div>
-          <div className="flex-1">{z.id}</div>
-          <div className="flex-1">Nov 13, 2025</div>
-          <div className="flex-1">{`${HOOKS_URL}/hooks/catch/1/${z.id}`}</div>
-          <div className="flex-1"><LinkButton onClick={() =>
-            router.push("/zap/" + z.id)
-          }>Go</LinkButton></div>
-       </div>
-       
-      )}
-   
+      <div className="flex-1">Name</div>
+      <div className="flex-1">ID</div>
+      <div className="flex-1">Created at</div>
+      <div className="flex-1">Webhook URL</div>
+      <div className="flex-1">Go</div>
+
+    </div>
+
+    {zaps.map(z => <div key={z.id} className="flex border-b border-t py-4">
+
+      <div className="flex-1 flex"> <img src={z.trigger.type.image} className="w-[30px] h-[30px]"/> {z.actions.map((x,index) => <img key={index} src={x.type.image} className="w-[30px] h-[30px]" />)}</div>
+      <div className="flex-1">{z.id}</div>
+      <div className="flex-1">Nov 13, 2025</div>
+      <div className="flex-1">{`${HOOKS_URL}/hooks/catch/1/${z.id}`}</div>
+      <div className="flex-1"><LinkButton onClick={() =>
+        router.push("/zap/" + z.id)
+      }>Go</LinkButton></div>
+    </div>
+
+    )}
+
   </div>
 
 }
@@ -106,10 +109,10 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
-    {loading ? "Loading..." : 
-    <div className="flex justify-center">
-      <ZapTable zaps={zaps} />
-    </div>
-}
+    {loading ? "Loading..." :
+      <div className="flex justify-center">
+        <ZapTable zaps={zaps} />
+      </div>
+    }
   </div>
 }
