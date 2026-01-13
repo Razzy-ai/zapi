@@ -45,6 +45,6 @@ app.post("/hooks/catch/:userId/:zapId", (req, res) => __awaiter(void 0, void 0, 
         res.status(500).json({ error: "Something went wrong" });
     }
 }));
-app.listen(3000, () => {
+app.listen(3002, () => {
     console.log("Server running on http://localhost:3000");
 });
