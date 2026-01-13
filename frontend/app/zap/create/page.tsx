@@ -67,7 +67,7 @@ export default function Create() {
                     "triggerMetadata": {},
                     "actions": selectedActions.map(a => ({
                         availableActionId: a.availableActionId,
-                        actionMedata: a.metadata
+                        actionMetadata: a.metadata
                     }))
 
                 }, {
