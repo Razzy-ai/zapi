@@ -42,20 +42,40 @@ function useZaps() {
   const [zaps, setZaps] = useState<Zap[]>([]);
 
   useEffect(() => {
-    axios.get(`${BACKEND_URL}/api/v1/zap`, {
-      headers: {
-        "Authorization": localStorage.getItem("token")
+    let cancelled = false;
+
+    async function fetchZaps() {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        if (!cancelled) setLoading(false);
+        return;
       }
-    })
-      .then(res => {
-        setZaps(res.data.zaps);
-        setLoading(false);
-      })
+
+      try {
+        const res = await axios.get(`${BACKEND_URL}/api/v1/zap`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!cancelled) {
+          setZaps(res.data.zaps);
+          setLoading(false);
+        }
+      } catch {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    fetchZaps();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  return {
-    loading, zaps
-  }
+  return { loading, zaps };
 }
 
 

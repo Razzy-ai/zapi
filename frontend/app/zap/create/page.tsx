@@ -153,6 +153,10 @@ function Modal({ index, onSelect, availableItems }: { index: number, onSelect: (
     }>();
     const isTrigger = index === 1;
 
+    useEffect(() => {
+  console.log("Selected action:", selectedAction);
+}, [selectedAction]);
+
 
     return <div className="fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-slate-200 bg-opacity-70 flex">
         <div className="relative p-4 w-full max-w-2xl max-h-full">
@@ -174,14 +178,14 @@ function Modal({ index, onSelect, availableItems }: { index: number, onSelect: (
                 <div className="space-y-4 md:p-5 p-4">
 
                     {/* here u will get metadata from trigger */}
-                    {step === 1 && selectedAction?.name === "email" && <EmailSelector setMetadata={(metadata) => {
+                    {step === 1 && selectedAction?.id === "send-email" && <EmailSelector setMetadata={(metadata) => {
                         onSelect({
                             ...selectedAction,
                             metadata
                         })
                     }} />}
 
-                    {(step === 1 && selectedAction?.name === "solana") && <SolanaSelector
+                    {(step === 1 && selectedAction?.id === "send-solana") && <SolanaSelector
                         setMetadata={(metadata) => {
                             onSelect({
                                 ...selectedAction!,
