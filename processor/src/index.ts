@@ -36,7 +36,7 @@ async function main() {
     await producer.send({
       topic: TOPIC_NAME,
       messages: pendingRows.map((r) => ({
-        value: r.zapRunId,
+        value: JSON.stringify({ zapRunId: r.zapRunId, stage: 0}),
       })),
     });
 
