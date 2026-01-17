@@ -33,6 +33,7 @@ function main() {
                 where: {},
                 take: 10,
             });
+            console.log(pendingRows);
             if (pendingRows.length === 0) {
                 yield new Promise((r) => setTimeout(r, 2000)); // prevent busy loop
                 continue;

@@ -3,6 +3,7 @@ dotenv.config();
 
 import { PrismaClient } from "./generated/prisma/client";
 import { Kafka } from "kafkajs";
+import { log } from "node:console";
 
 const TOPIC_NAME = "zap-events";
 const client = new PrismaClient();
@@ -24,6 +25,8 @@ async function main() {
       where: {},
       take: 10,
     });
+
+    console.log(pendingRows)
 
     if (pendingRows.length === 0) {
       await new Promise((r) => setTimeout(r, 2000)); // prevent busy loop
