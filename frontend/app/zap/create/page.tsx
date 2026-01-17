@@ -54,30 +54,44 @@ export default function Create() {
     return <div>
         <Appbar />
 
-        <div className="flex justify-end bg-slate-200 p-4">
-            <PrimaryButton onClick={async () => {
+       <div className="flex justify-end bg-slate-200 p-4">
+  <PrimaryButton
+    onClick={async () => {
+      if (!selectedTrigger?.id) {
+        return;
+      }
 
+      const token = localStorage.getItem("token");
 
-                if (!selectedTrigger?.id) {
-                    return;
-                }
+      if (!token) {
+        alert("Not authenticated");
+        return;
+      }
 
-                const response = await axios.post(`${BACKEND_URL}/api/v1/zap`, {
-                    "availableTriggerId": selectedTrigger.id,
-                    "triggerMetadata": {},
-                    "actions": selectedActions.map(a => ({
-                        availableActionId: a.availableActionId,
-                        actionMetadata: a.metadata
-                    }))
+      await axios.post(
+        `${BACKEND_URL}/api/v1/zap`,
+        {
+          availableTriggerId: selectedTrigger.id,
+          triggerMetadata: {},
+          actions: selectedActions.map(a => ({
+            availableActionId: a.availableActionId,
+            actionMetadata: a.metadata,
+          })),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-                }, {
-                    headers: {
-                        Authorization: localStorage.getItem("token")
-                    }
-                })
-                router.push("/dashboard")
-            }}>Publish</PrimaryButton>
-        </div>
+      router.push("/dashboard");
+    }}
+  >
+    Publish
+  </PrimaryButton>
+</div>
+
 
 
         <div className="w-full min-h-screen h-screen bg-slate-200 flex flex-col justify-center">
