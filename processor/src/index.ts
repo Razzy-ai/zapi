@@ -32,13 +32,17 @@ async function main() {
       await new Promise((r) => setTimeout(r, 2000)); // prevent busy loop
       continue;
     }
+    
+    
 
     await producer.send({
       topic: TOPIC_NAME,
       messages: pendingRows.map((r) => ({
         value: JSON.stringify({ zapRunId: r.zapRunId, stage: 0}),
+        
       })),
     });
+
 
     await client.zapRunOutbox.deleteMany({
       where: {
