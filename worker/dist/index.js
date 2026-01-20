@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const kafkajs_1 = require("kafkajs");
+const parser_1 = require("./parser");
 const prismaClient = new client_1.PrismaClient();
 const TOPIC_NAME = "zap-events";
 const kafka = new kafkajs_1.Kafka({
@@ -27,7 +28,7 @@ function main() {
         yield consumer.run({
             autoCommit: false,
             eachMessage: (_a) => __awaiter(this, [_a], void 0, function* ({ topic, partition, message }) {
-                var _b, _c, _d, _e;
+                var _b, _c, _d, _e, _f, _g, _h, _j;
                 console.log({
                     partition,
                     offset: message.offset,
@@ -60,15 +61,24 @@ function main() {
                 if (!currentActions) {
                     console.log("Current action not found");
                 }
+                const zapRunMetadata = zapRunDetails === null || zapRunDetails === void 0 ? void 0 : zapRunDetails.metadata;
                 if ((currentActions === null || currentActions === void 0 ? void 0 : currentActions.type.id) === "send-email") {
-                    console.log("Sending out an email");
+                    //parse out the email,body to send which was given by zapier user while selecting actions
+                    const body = (0, parser_1.parse)((_e = currentActions.metadata) === null || _e === void 0 ? void 0 : _e.body, zapRunMetadata); // you just recv {comment.amount}
+                    const to = (0, parser_1.parse)((_f = currentActions.metadata) === null || _f === void 0 ? void 0 : _f.email, zapRunMetadata); //{comment.email}
+                    //parse original metadata of external app ie.{comment: {email: "name@gmail.com" , etc}}
+                    console.log(`Sending out email to ${to} body is ${body}`);
                 }
                 if ((currentActions === null || currentActions === void 0 ? void 0 : currentActions.type.id) === "send-solana") {
-                    console.log("Sending out solana");
+                    // parse out the amount , address to send
+                    const amount = (0, parser_1.parse)((_g = currentActions.metadata) === null || _g === void 0 ? void 0 : _g.amount, zapRunMetadata); // you just recv {comment.amount}
+                    const address = (0, parser_1.parse)((_h = currentActions.metadata) === null || _h === void 0 ? void 0 : _h.address, zapRunMetadata); //{comment.email}
+                    console.log(`Sending out Sol of ${amount} to address ${address}`);
                 }
                 //
                 yield new Promise(r => setTimeout(r, 5000));
-                const lastStage = (((_e = zapRunDetails === null || zapRunDetails === void 0 ? void 0 : zapRunDetails.zap.actions) === null || _e === void 0 ? void 0 : _e.length) || 1) - 1;
+                //
+                const lastStage = (((_j = zapRunDetails === null || zapRunDetails === void 0 ? void 0 : zapRunDetails.zap.actions) === null || _j === void 0 ? void 0 : _j.length) || 1) - 1;
                 if (lastStage !== stage) {
                     //push the next stage in the kafka queue
                     yield producer.send({

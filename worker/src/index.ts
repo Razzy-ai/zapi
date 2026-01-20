@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import { JsonObject } from "@prisma/client/runtime/library";
 import { Kafka } from "kafkajs";
+import { parse } from "./parser";
 
 const prismaClient = new PrismaClient();
 const TOPIC_NAME = "zap-events";
@@ -59,21 +61,33 @@ async function main() {
         console.log("Current action not found");
       }
 
+      const zapRunMetadata = zapRunDetails?.metadata;
+       
       if (currentActions?.type.id === "send-email") {
-        console.log("Sending out an email");
-        //parse out the email,body to send
+        
+        //parse out the email,body to send which was given by zapier user while selecting actions
+        const body = parse((currentActions.metadata as JsonObject)?.body as string, zapRunMetadata);  // you just recv {comment.amount}
+        const to = parse((currentActions.metadata as JsonObject)?.email as string , zapRunMetadata) ;   //{comment.email}
 
+        //parse original metadata of external app ie.{comment: {email: "name@gmail.com" , etc}}
+         console.log(`Sending out email to ${to} body is ${body}`);
+         
       }
       if (currentActions?.type.id === "send-solana") {
-        console.log("Sending out solana");
+      
         // parse out the amount , address to send
+         const amount = parse((currentActions.metadata as JsonObject)?.amount as string, zapRunMetadata);  // you just recv {comment.amount}
+         const address = parse((currentActions.metadata as JsonObject)?.address as string , zapRunMetadata) ;   //{comment.email}
+
+        console.log(`Sending out Sol of ${amount} to address ${address}`);
+        
       }
 
 
       //
       await new Promise(r => setTimeout(r, 5000))
 
-      
+      //
       const lastStage = (zapRunDetails?.zap.actions?.length || 1) - 1;
 
       if (lastStage !== stage) {
