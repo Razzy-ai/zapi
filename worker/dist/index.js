@@ -9,9 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require('dotenv').config();
 const client_1 = require("@prisma/client");
 const kafkajs_1 = require("kafkajs");
 const parser_1 = require("./parser");
+const email_1 = require("./email");
+const solana_1 = require("./solana");
 const prismaClient = new client_1.PrismaClient();
 const TOPIC_NAME = "zap-events";
 const kafka = new kafkajs_1.Kafka({
@@ -68,12 +71,14 @@ function main() {
                     const to = (0, parser_1.parse)((_f = currentActions.metadata) === null || _f === void 0 ? void 0 : _f.email, zapRunMetadata); //{comment.email}
                     //parse original metadata of external app ie.{comment: {email: "name@gmail.com" , etc}}
                     console.log(`Sending out email to ${to} body is ${body}`);
+                    yield (0, email_1.sendEmail)(to, body);
                 }
                 if ((currentActions === null || currentActions === void 0 ? void 0 : currentActions.type.id) === "send-solana") {
                     // parse out the amount , address to send
                     const amount = (0, parser_1.parse)((_g = currentActions.metadata) === null || _g === void 0 ? void 0 : _g.amount, zapRunMetadata); // you just recv {comment.amount}
                     const address = (0, parser_1.parse)((_h = currentActions.metadata) === null || _h === void 0 ? void 0 : _h.address, zapRunMetadata); //{comment.email}
                     console.log(`Sending out Sol of ${amount} to address ${address}`);
+                    yield (0, solana_1.sendSol)(address, amount);
                 }
                 //
                 yield new Promise(r => setTimeout(r, 5000));
